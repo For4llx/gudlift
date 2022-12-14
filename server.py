@@ -1,4 +1,6 @@
 import json
+from club import Club
+from competition import Competition
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
@@ -43,11 +45,24 @@ def book(competition,club):
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
+    competition_data = [[c, i] for i, c in enumerate(competitions) if c['name'] == request.form['competition']][0]
+    club_data = [[c, i] for i, c in enumerate(clubs) if c['name'] == request.form['club']][0]
+    competition = Competition(**competition_data[0])
+    club = Club(**club_data[0])
+    competition_index = competition_data[1]
+    club_index = club_data[1]
+    places_required = int(request.form['places'])
+
+    if not competition.name in club.places_booked:
+        club.places_booked[competition.name] = 0
+
+    club.remove_points(places_required)
+    club.add_places_to_competition(places_required, competition.name)
+    club.save(clubs, club_index)
+    competition.remove_places(places_required)
+    competition.save(competitions, competition_index)
+
+    flash(f'You have successfully booked {places_required} places for the {competition.name}')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
