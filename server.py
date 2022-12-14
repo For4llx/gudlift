@@ -56,11 +56,21 @@ def purchasePlaces():
     if not competition.name in club.places_booked:
         club.places_booked[competition.name] = 0
 
-    club.remove_points(places_required)
-    club.add_places_to_competition(places_required, competition.name)
-    club.save(clubs, club_index)
-    competition.remove_places(places_required)
-    competition.save(competitions, competition_index)
+    if club.places_booked[competition.name] + places_required > competition.max_places_required:
+        flash("Sorry, you can't book more than 12 places for this competition.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    elif places_required > competition.numberOfPlaces:
+        flash("Sorry, you have selected more places than available.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    elif club.points < places_required:
+        flash("Sorry, you don't have enough points.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    else:
+        club.remove_points(places_required)
+        club.add_places_to_competition(places_required, competition.name)
+        club.save(clubs, club_index)
+        competition.remove_places(places_required)
+        competition.save(competitions, competition_index)
 
     flash(f'You have successfully booked {places_required} places for the {competition.name}')
     return render_template('welcome.html', club=club, competitions=competitions)
