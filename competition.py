@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 
 @dataclass
 class Competition:
@@ -21,3 +22,6 @@ class Competition:
 
     def save(self, competitions: list, index: int):
         competitions[index] = self.data()
+        serialized_compettions = json.dumps({"competitions" : competitions})
+        with open('competitions.json', "w") as file:
+            file.write(serialized_compettions)
