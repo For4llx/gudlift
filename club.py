@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 
 @dataclass
 class Club:
@@ -24,3 +25,6 @@ class Club:
 
     def save(self, clubs: list, index: int):
         clubs[index] = self.data()
+        serialized_clubs = json.dumps({"clubs" : clubs})
+        with open('clubs.json', "w") as file:
+            file.write(serialized_clubs)
