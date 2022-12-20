@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 
 @dataclass
@@ -6,7 +6,7 @@ class Club:
     name: str
     email: str
     points: int
-    places_booked = {}
+    places_booked: dict = field(default_factory={})
     
     def data(self):
         data = {
