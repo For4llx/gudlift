@@ -9,8 +9,14 @@
     Please enter your secretary email to continue:
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
-        <button type="submit">Enter</button>
+        <input type="email" name="email" id="email"/>
+        <button id="submit" type="submit">Enter</button>
     </form>
+    <h2>Nombre de points par clubs</h2>
+    <ul>
+    {% for club in clubs %}
+        <li>{{club['name']}} : {{club['points']}} points</li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
