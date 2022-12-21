@@ -6,7 +6,7 @@ class Club:
     name: str
     email: str
     points: int
-    places_booked: dict = field(default_factory={})
+    places_booked: dict = field(default_factory=dict)
     
     def data(self):
         data = {
